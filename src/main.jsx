@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root";
 import ErrorPage from "./components/ErrorPage";
+import Shop, { shopAction, shopLoader } from "./routes/Shop";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,9 @@ const router = createBrowserRouter([
       },
       {
         path: "shop",
-        element: <div>shop page</div>,
+        element: <Shop />,
+        loader: shopLoader,
+        action: shopAction,
       },
       {
         path: "cart",
