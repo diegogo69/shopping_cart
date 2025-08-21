@@ -1,0 +1,1 @@
+Add global styles through styled-components
