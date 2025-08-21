@@ -17,7 +17,7 @@ const storage = {
   },
   init() {
     if (localStorage.getItem("cart")) return;
-    storage.set("cart", []);
+    storage.set("cart", {});
   },
   getCart() {
     return this.get("cart");
@@ -25,15 +25,20 @@ const storage = {
   setCart(value) {
     this.set("cart", value);
   },
-  addToCart(value) {
+  addToCart(productId) {
     const cart = this.getCart();
-    if (cart.includes(value)) return;
-    cart.push(value);
+    const newProduct = { id: productId, quantity: 1 };
+    const updateCart = { ...cart, [productId]: newProduct };
+    this.setCart(updateCart);
+  },
+  removeFromCart(productId) {
+    const cart = this.getCart();
+    delete cart[productId];
     this.setCart(cart);
   },
-  removeFromCart(value) {
+  setItemQuantity(productId, quantity) {
     const cart = this.getCart();
-    cart.splice(cart.indexOf(value), 1);
+    cart[productId]["quantity"] = quantity;
     this.setCart(cart);
   },
 };

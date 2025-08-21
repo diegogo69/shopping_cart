@@ -10,7 +10,8 @@ export default function ProductCards({ products, cartProducts }) {
     <div>
       {products.map((product) => {
         const isAdded = cartProducts
-          ? cartProducts.includes(product.id)
+          // ? cartProducts.includes(product.id)
+          ? Object.hasOwn(cartProducts, product.id)
           : false;
         return (
           <ProductCard key={product.id} product={product} isAdded={isAdded} />

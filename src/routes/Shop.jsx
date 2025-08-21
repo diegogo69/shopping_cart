@@ -14,7 +14,7 @@ export async function shopLoader() {
 // Action
 export async function shopAction({ request }) {
   const formData = await request.formData();
-  const productId = parseInt(formData.get("product-id"));
+  const productId = formData.get("product-id");
   const add = formData.get("add");
 
   if (add === "true") {
@@ -22,6 +22,7 @@ export async function shopAction({ request }) {
   } else if (add === "false") {
     storage.removeFromCart(productId);
   }
+  // storage.clear()
 }
 
 export default function Shop() {

@@ -21,8 +21,8 @@ function AddToCartBtn({ isAdded, productId }) {
     ? fetcher.formData.get("add") === "true"
     : isAdded;
 
-  const addedLabel = isAdded ? "Added" : "Add to cart";
-  const btnText = isHovered && isAdded ? "Remove" : addedLabel;
+  const addedLabel = add ? "Added" : "Add to cart";
+  const btnText = isHovered && add ? "Remove" : addedLabel;
 
   return (
     <fetcher.Form method="post">
