@@ -2,55 +2,74 @@ import { useEffect, useState } from "react";
 import storage from "../storage";
 import { useFetcher } from "react-router-dom";
 
-export default function CartItem({ item, quantity }) {
+export default function CartItem({ item, quantity, inputQu }) {
   return (
     <div>
       <div>{item.id}</div>
       <div>{item.title}</div>
       <div>{item.price}</div>
       <img src={item.image} alt={item.title} />
-      <Quantifier itemId={item.id} quantity={quantity} />
+      <Quantifier itemId={item.id} quantity={quantity} inputQu={inputQu} />
     </div>
   );
 }
 
 const isPositiveInteger = /^[1-9]\d*$/;
-function Quantifier({ itemId, quantity }) {
+function Quantifier({ itemId, quantity, inputQu }) {
   const fetcher = useFetcher();
-  const add = fetcher.formData
-    ? fetcher.formData.get("quantity") !== quantity
-    : isAdded;
+  // const add = fetcher.formData
+  //   ? fetcher.formData.get("quantity") !== quantity
+  //   : isAdded;
 
-  const quantityChangeHandler = (e) => {
+  const quantityIncreaseHandler = (e) => {
+    e.preventDefault();
+    inputQu(itemId, quantity + 1);
+    console.log("called increase");
+  };
+
+  const quantityDecreaseHandler = (e) => {
+    e.preventDefault();
+    inputQu(itemId, quantity - 1);
+  };
+
+  const validateQuInput = (e) => {
     const val = e.currentTarget.value;
+    if (val === "") {
+      e.currentTarget.value = quantity;
+      e.currentTarget.select();
+      return;
+    }
+
     if (!isPositiveInteger.test(val)) return;
+
+    inputQu(itemId, val);
   };
 
   return (
     <div>
-      <fetcher.Form method="post">
-        <button type="submit" name="quantity" value={quantity - 1}>
-          -
-        </button>
-        <input type="hidden" name="product-id" value={itemId} />
-      </fetcher.Form>
+      <button
+        type="submit"
+        name="quantity"
+        value={quantity - 1}
+        onClick={quantityDecreaseHandler}
+      >
+        -
+      </button>
 
-      <fetcher.Form method="post">
-        <input
-          type="text"
-          name="quantity"
-          value={quantity}
-          onChange={quantityChangeHandler}
-        />
-        <input type="hidden" name="product-id" value={itemId} />
-      </fetcher.Form>
+      <input
+        type="text"
+        name="quantity"
+        value={quantity}
+        onChange={validateQuInput}
+      />
 
-      <fetcher.Form method="post">
-        <button name="quantity" value={quantity + 1}>
-          +
-        </button>
-        <input type="hidden" name="product-id" value={itemId} />
-      </fetcher.Form>
+      <button
+        name="quantity"
+        value={quantity + 1}
+        onClick={quantityIncreaseHandler}
+      >
+        +
+      </button>
     </div>
   );
 }

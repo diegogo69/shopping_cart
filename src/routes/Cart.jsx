@@ -3,18 +3,6 @@ import CartItems from "../components/CartItems";
 import storage from "../storage";
 import { useEffect, useState } from "react";
 
-const getCartTotal = (cartItems, cartObj) => {
-  const cartTotal = cartItems
-    .map((item) => {
-      const itemQu = parseInt(cartObj[item.id]["quantity"]);
-      const itemTotal = item.price * itemQu;
-      return itemTotal;
-    })
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-  return cartTotal;
-};
-
 // Loader
 export async function cartLoader() {
   const cartObj = storage.getCart();
@@ -28,9 +16,8 @@ export async function cartLoader() {
   const cartItems = await Promise.all(response.map((res) => res.json()));
   console.log(cartItems);
   console.log(cartObj);
-  const cartTotal = getCartTotal(cartItems, cartObj);
 
-  return { cartItems, cartObj, cartTotal };
+  return { cartItems, cartObj };
 }
 
 // Action
@@ -43,11 +30,10 @@ export async function cartAction({ request }) {
 }
 
 export default function Cart() {
-  const { cartItems, cartObj, cartTotal } = useLoaderData();
+  const { cartItems, cartObj } = useLoaderData();
 
   return (
     <>
-      <div>Hello Cart - Total $ {cartTotal}</div>
       <CartItems cartItems={cartItems} cartObj={cartObj} />
     </>
   );
