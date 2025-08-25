@@ -23,10 +23,8 @@ export async function cartLoader() {
 // Action
 export async function cartAction({ request }) {
   const formData = await request.formData();
-  const productId = formData.get("product-id");
-  const quantity = parseInt(formData.get("quantity"));
-
-  storage.setItemQuantity(productId, quantity);
+  const productId = formData.get("item-id");
+  storage.removeFromCart(productId);
 }
 
 export default function Cart() {

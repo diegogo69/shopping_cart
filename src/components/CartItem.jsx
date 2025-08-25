@@ -3,8 +3,14 @@ import storage from "../storage";
 import { useFetcher } from "react-router-dom";
 
 export default function CartItem({ item, quantity, inputQu }) {
+  const fetcher = useFetcher();
+
   return (
     <div>
+      <fetcher.Form method="post">
+        <button type="submit">Remove</button>
+        <input type="hidden" name="item-id" value={item.id} />
+      </fetcher.Form>
       <div>{item.id}</div>
       <div>{item.title}</div>
       <div>{item.price}</div>
@@ -16,7 +22,6 @@ export default function CartItem({ item, quantity, inputQu }) {
 
 const isPositiveInteger = /^[1-9]\d*$/;
 function Quantifier({ itemId, quantity, inputQu }) {
-  const fetcher = useFetcher();
   // const add = fetcher.formData
   //   ? fetcher.formData.get("quantity") !== quantity
   //   : isAdded;
