@@ -4,8 +4,9 @@ export default function CartItems({ cartItems, cartObj }) {
   return (
     <div>
       {cartItems.map((item) => {
-        
-        return <CartItem key={item.id} item={item} quantity={cartObj[item.id]['quantity']} />;
+        const quantity = parseInt(cartObj[item.id]["quantity"]);
+
+        return <CartItem key={item.id} item={item} quantity={quantity} />;
       })}
     </div>
   );

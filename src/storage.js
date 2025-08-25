@@ -28,8 +28,9 @@ const storage = {
   addToCart(productId) {
     const cart = this.getCart();
     const newProduct = { id: productId, quantity: 1 };
-    const updateCart = { ...cart, [productId]: newProduct };
-    this.setCart(updateCart);
+    cart[productId] = newProduct;
+    // const updateCart = { ...cart, [productId]: newProduct };
+    this.setCart(cart);
   },
   removeFromCart(productId) {
     const cart = this.getCart();

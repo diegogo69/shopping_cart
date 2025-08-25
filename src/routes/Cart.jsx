@@ -1,6 +1,19 @@
 import { useLoaderData } from "react-router-dom";
 import CartItems from "../components/CartItems";
 import storage from "../storage";
+import { useEffect, useState } from "react";
+
+const getCartTotal = (cartItems, cartObj) => {
+  const cartTotal = cartItems
+    .map((item) => {
+      const itemQu = parseInt(cartObj[item.id]["quantity"]);
+      const itemTotal = item.price * itemQu;
+      return itemTotal;
+    })
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+  return cartTotal;
+};
 
 // Loader
 export async function cartLoader() {
@@ -13,30 +26,28 @@ export async function cartLoader() {
     )
   );
   const cartItems = await Promise.all(response.map((res) => res.json()));
+  console.log(cartItems);
+  console.log(cartObj);
+  const cartTotal = getCartTotal(cartItems, cartObj);
 
-  return { cartItems, cartObj };
+  return { cartItems, cartObj, cartTotal };
 }
 
 // Action
 export async function cartAction({ request }) {
   const formData = await request.formData();
   const productId = formData.get("product-id");
-  const add = formData.get("add");
+  const quantity = parseInt(formData.get("quantity"));
 
-  if (add === "true") {
-    storage.addToCart(productId);
-  } else if (add === "false") {
-    storage.removeFromCart(productId);
-  }
-
+  storage.setItemQuantity(productId, quantity);
 }
 
 export default function Cart() {
-  const { cartItems, cartObj } = useLoaderData();
+  const { cartItems, cartObj, cartTotal } = useLoaderData();
 
   return (
     <>
-      <div>Hello Cart</div>
+      <div>Hello Cart - Total $ {cartTotal}</div>
       <CartItems cartItems={cartItems} cartObj={cartObj} />
     </>
   );

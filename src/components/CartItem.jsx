@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useFetcher } from "react-router-dom";
 import storage from "../storage";
+import { useFetcher } from "react-router-dom";
 
 export default function CartItem({ item, quantity }) {
   return (
@@ -16,34 +16,41 @@ export default function CartItem({ item, quantity }) {
 
 const isPositiveInteger = /^[1-9]\d*$/;
 function Quantifier({ itemId, quantity }) {
-  const [counter, setCounter] = useState(quantity);
   const fetcher = useFetcher();
+  const add = fetcher.formData
+    ? fetcher.formData.get("quantity") !== quantity
+    : isAdded;
 
   const quantityChangeHandler = (e) => {
     const val = e.currentTarget.value;
     if (!isPositiveInteger.test(val)) return;
-
-    setCounter(parseInt(val));
   };
-
-  useEffect(() => {
-    storage.setItemQuantity(itemId, counter)
-  }, [counter])
 
   return (
     <div>
-      <button type="button" onClick={() => setCounter((c) => c - 1)}>
-        -
-      </button>
-      <input
-        type="text"
-        name="quantity"
-        value={counter}
-        onChange={quantityChangeHandler}
-      />
-      <button type="button" onClick={() => setCounter((c) => c + 1)}>
-        +
-      </button>
+      <fetcher.Form method="post">
+        <button type="submit" name="quantity" value={quantity - 1}>
+          -
+        </button>
+        <input type="hidden" name="product-id" value={itemId} />
+      </fetcher.Form>
+
+      <fetcher.Form method="post">
+        <input
+          type="text"
+          name="quantity"
+          value={quantity}
+          onChange={quantityChangeHandler}
+        />
+        <input type="hidden" name="product-id" value={itemId} />
+      </fetcher.Form>
+
+      <fetcher.Form method="post">
+        <button name="quantity" value={quantity + 1}>
+          +
+        </button>
+        <input type="hidden" name="product-id" value={itemId} />
+      </fetcher.Form>
     </div>
   );
 }
